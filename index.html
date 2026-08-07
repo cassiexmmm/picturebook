@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>宝宝的第一场冒险</title>
+<style>
+:root {
+  --bg: #FBF5EC;
+  --bg-warm: #F5EDE0;
+  --text: #4A3B2E;
+  --text-light: #9B8B7A;
+  --accent: #C9A063;
+  --accent-light: #E8D5B5;
+  --shadow-warm: 0 8px 32px rgba(201, 160, 99, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  z-index: 100;
+  width: 0%;
+  transition: width 0.1s ease-out;
+}
+
+.book {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Cover */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+}
+
+.cover-butterfly {
+  width: 52px;
+  height: 44px;
+  color: var(--accent);
+  margin-bottom: 36px;
+  animation: flutter 3.5s ease-in-out infinite;
+}
+
+@keyframes flutter {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+.cover-title {
+  font-family: "Songti SC", "STSong", "Noto Serif SC", serif;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.cover-subtitle {
+  font-size: 14px;
+  color: var(--text-light);
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+
+.cover-style {
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 40px;
+}
+
+.cover-hint {
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-top: 80px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* Scene */
+.scene {
+  padding: 56px 0 56px;
+}
+
+.scene-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.scene-header-line {
+  display: inline-block;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  position: relative;
+  padding: 0 20px;
+}
+
+.scene-header-line::before,
+.scene-header-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 1px;
+  background: var(--accent-light);
+}
+
+.scene-header-line::before { left: -20px; }
+.scene-header-line::after { right: -20px; }
+
+.scene-image {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: var(--shadow-warm);
+  margin-bottom: 36px;
+  display: block;
+}
+
+.scene-text {
+  font-family: "Songti SC", "STSong", "Noto Serif SC", serif;
+  font-size: 19px;
+  line-height: 2.1;
+  text-align: center;
+  color: var(--text);
+  padding: 0 20px;
+}
+
+.scene-divider {
+  text-align: center;
+  margin-top: 36px;
+  color: var(--accent-light);
+  font-size: 14px;
+}
+
+.scene-page {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-light);
+  letter-spacing: 0.25em;
+  margin-top: 12px;
+}
+
+/* Ending */
+.ending {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px 100px;
+}
+
+.ending-butterfly {
+  width: 40px;
+  height: 34px;
+  color: var(--accent);
+  opacity: 0.5;
+  margin-bottom: 28px;
+}
+
+.ending-text {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 16px;
+  color: var(--text-light);
+  letter-spacing: 0.2em;
+}
+
+.ending-closing {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  margin-top: 36px;
+  max-width: 300px;
+  line-height: 2.2;
+}
+
+/* Fade-in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 380px) {
+  .cover-title { font-size: 28px; }
+  .scene-header-line { font-size: 18px; }
+  .scene-text { font-size: 18px; }
+}
+
+.scene-image { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="book">
+
+  <section class="cover fade-in">
+    <svg class="cover-butterfly" viewBox="0 0 60 50" fill="currentColor">
+      <path d="M30 25 C20 6 4 8 4 20 C4 33 18 39 30 25" opacity="0.55"/>
+      <path d="M30 25 C40 6 56 8 56 20 C56 33 42 39 30 25" opacity="0.55"/>
+      <ellipse cx="30" cy="25" rx="1.5" ry="11"/>
+    </svg>
+    <h1 class="cover-title">宝宝的第一场冒险</h1>
+    <p class="cover-subtitle">一本献给宝宝和妈妈的绘本故事</p>
+    <p class="cover-style">粉蜡笔风格</p>
+    <p class="cover-hint">向下滑动阅读 ↓</p>
+  </section>
+
+  <section class="scene fade-in">
+    <div class="scene-header">
+      <span class="scene-header-line">第一页 · 出发</span>
+    </div>
+    <img class="scene-image" src="绘本图片_粉蜡笔风格/01_出发.png" alt="出发">
+    <div class="scene-text">
+      <p>一只金色的蝴蝶飞进了窗，</p>
+      <p>宝宝的眼睛，一下子亮了起来。</p>
+    </div>
+    <div class="scene-divider">✦</div>
+    <div class="scene-page">1 / 8</div>
+  </section>
+
+  <section class="scene fade-in">
+    <div class="scene-header">
+      <span class="scene-header-line">第二页 · 沙发山</span>
+    </div>
+    <img class="scene-image" src="绘本图片_粉蜡笔风格/02_沙发山.png" alt="沙发山">
+    <div class="scene-text">
+      <p>爬呀爬，爬上沙发大山的山顶——</p>
+      <p>哎呀，蝴蝶又飞走啦！</p>
+    </div>
+    <div class="scene-divider">✦</div>
+    <div class="scene-page">2 / 8</div>
+  </section>
+
+  <section class="scene fade-in">
+    <div class="scene-header">
+      <span class="scene-header-line">第三页 · 走廊森林</span>
+    </div>
+    <img class="scene-image" src="绘本图片_粉蜡笔风格/03_走廊森林.png" alt="走廊森林">
+    <div class="scene-text">
+      <p>走廊变成了大森林，</p>
+      <p>阳光落下来，一闪一闪，像会飞的小星星。</p>
+    </div>
+    <div class="scene-divider">✦</div>
+    <div class="scene-page">3 / 8</div>
+  </section>
+
+  <section class="scene fade-in">
+    <div class="scene-header">
+      <span class="scene-header-line">第四页 · 厨房洞穴</span>
+    </div>
+    <img class="scene-image" src="绘本图片_粉蜡笔风格/04_厨房洞穴.png" alt="厨房洞穴">
+    <div class="scene-text">
+      <p>魔法洞穴里全是宝贝！</p>
+      <p>宝宝举起红苹果——这是他找到的第一件宝藏。</p>
+    </div>
+    <div class="scene-divider">✦</div>
+    <div class="scene-page">4 / 8</div>
+  </section>
+
+  <section class="scene fade-in">
+    <div class="scene-header">
+      <span class="scene-header-line">第五页 · 花园草原</span>
+    </div>
+    <img class="scene-image" src="绘本图片_粉蜡笔风格/05_花园草原.png" alt="花园草原">
+    <div class="scene-text">
+      <p>风吹过大草原，宝宝张开手臂——</p>
+      <p>整个世界，都在轻轻地抱着他。</p>
+    </div>
+    <div class="scene-divider">✦</div>
+    <div class="scene-page">5 / 8</div>
+  </section>
+
+  <section class="scene fade-in">
+    <div class="scene-header">
+      <span class="scene-header-line">第六页 · 遇见朋友</span>
+    </div>
+    <img class="scene-image" src="绘本图片_粉蜡笔风格/06_遇见朋友.png" alt="遇见朋友">
+    <div class="scene-text">
+      <p>你好呀，小猫咪。</p>
+      <p>鼻子碰鼻子——我们做朋友吧！</p>
+    </div>
+    <div class="scene-divider">✦</div>
+    <div class="scene-page">6 / 8</div>
+  </section>
+
+  <section class="scene fade-in">
+    <div class="scene-header">
+      <span class="scene-header-line">第七页 · 日落归途</span>
+    </div>
+    <img class="scene-image" src="绘本图片_粉蜡笔风格/07_日落归途.png" alt="日落归途">
+    <div class="scene-text">
+      <p>太阳要睡觉了，</p>
+      <p>蝴蝶变成小灯笼，照着宝宝回家的路。</p>
+    </div>
+    <div class="scene-divider">✦</div>
+    <div class="scene-page">7 / 8</div>
+  </section>
+
+  <section class="scene fade-in">
+    <div class="scene-header">
+      <span class="scene-header-line">第八页 · 回到妈妈怀里</span>
+    </div>
+    <img class="scene-image" src="绘本图片_粉蜡笔风格/08_回到妈妈怀里.png" alt="回到妈妈怀里">
+    <div class="scene-text">
+      <p>妈妈的怀抱，是全世界最软最暖的地方。</p>
+      <p>晚安，小小冒险家——明天，还有新的奇迹等着你。</p>
+    </div>
+    <div class="scene-divider">✦</div>
+    <div class="scene-page">8 / 8</div>
+  </section>
+
+  <section class="ending fade-in">
+    <svg class="ending-butterfly" viewBox="0 0 60 50" fill="currentColor">
+      <path d="M30 25 C20 6 4 8 4 20 C4 33 18 39 30 25" opacity="0.45"/>
+      <path d="M30 25 C40 6 56 8 56 20 C56 33 42 39 30 25" opacity="0.45"/>
+      <ellipse cx="30" cy="25" rx="1.5" ry="11"/>
+    </svg>
+    <p class="ending-text">—— 全书完 ——</p>
+    <p class="ending-closing">晚安，小小冒险家<br>明天，还有新的奇迹等着你</p>
+  </section>
+
+</div>
+
+<script>
+window.addEventListener('scroll', function() {
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  var s = (window.scrollY / h) * 100;
+  document.getElementById('progressBar').style.width = s + '%';
+});
+
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.fade-in').forEach(function(el) {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
